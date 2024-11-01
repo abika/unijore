@@ -11,6 +11,6 @@ class DataBoundary {
 
     @GetMapping("/data")
     fun findAll(): String {
-        return """{"value": "dummy"}"""
+        return if (true) """{"value": "dummy"}""" else ""
     }
 }
