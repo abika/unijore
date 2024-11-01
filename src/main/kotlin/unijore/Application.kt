@@ -1,4 +1,4 @@
-package ujodsri
+package unijore
 
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner

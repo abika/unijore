@@ -1,4 +1,4 @@
-package ujodsri
+package unijore
 
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController

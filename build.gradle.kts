@@ -7,7 +7,7 @@ plugins {
     kotlin("plugin.spring") version "2.0.0"
 }
 
-group = "org.abika"
+group = "org.unijore"
 version = "1.0-SNAPSHOT"
 
 repositories {
