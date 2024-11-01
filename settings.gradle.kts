@@ -13,4 +13,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "ujodsri"
+rootProject.name = "unijore"

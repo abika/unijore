@@ -15,8 +15,8 @@ import org.springframework.boot.test.web.client.getForObject
 class DataBoundaryTest(@Autowired private val restTemplate:TestRestTemplate) {
 
     @Test
-    fun data_returns_data() {
+    fun data_when_there_is_no_data_returns_empty_list() {
         val actual = restTemplate.getForObject<String>("/data")
-        assertEquals("""{"value": "dummy"}""", actual)
+        assertEquals("[]", actual)
     }
 }
