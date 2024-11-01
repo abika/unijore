@@ -27,9 +27,7 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
-tasks.withType<JavaCompile> {
-    options.release = 22
-}
+
 tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-    jvmTarget = "22"
+    jvmTarget = "1.8"
 }
