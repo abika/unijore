@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 
+
 /**
  * @author Alexander Bikadorov {@literal <goto@openmailbox.org>}
  */
@@ -22,8 +23,10 @@ class DataBoundary(private val dataRepository: DataRepository) {
     // TODO or (@RequestBody: payload: JsonNode)?
     fun store(@RequestBody payload: Map<String, Object>): ResponseEntity<Long> {
         logger.info("Got data: $payload")
-        val d: DataObject = DataObject(data = payload.toString())
-        val savedData = dataRepository.save(d)
-        return ResponseEntity(savedData.id, HttpStatus.OK)
+
+        val data: DataObject = DataObject(data = payload.toString())
+        val savedData = dataRepository.save(data)
+
+        return ResponseEntity<Long>(savedData.id, HttpStatus.OK)
     }
 }
