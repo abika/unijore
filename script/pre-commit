@@ -3,9 +3,6 @@ echo "*********************************************************"
 echo "Running git pre-commit hook. Running Detekt... "
 echo "*********************************************************"
 
-# Gather the staged files - to make sure changes are saved only for these files.
-stagedFiles=$(git diff --staged --name-only)
-
 # run detekt
 ./gradlew detekt
 
@@ -13,12 +10,6 @@ status=$?
 
 if [ "$status" = 0 ] ; then
     echo "Static analysis found no problems."
-    # Add staged file changes to git
-    for file in $stagedFiles; do
-      if test -f "$file"; then
-        git add $file
-      fi
-    done
     #Exit
     exit 0
 else
