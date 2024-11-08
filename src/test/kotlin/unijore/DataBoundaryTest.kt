@@ -29,29 +29,29 @@ import org.springframework.test.context.ContextConfiguration
 class DataBoundaryTest(@Autowired private val restTemplate: TestRestTemplate) {
 
     @Test
-    fun `get all data when there is no data returns empty list`() {
-        val responseData: List<Any>? = restTemplate.getForObject<List<Any>>("/data")
+    fun `get ids returns empty list when there is no data`() {
+        val responseData: List<Any>? = restTemplate.getForObject<List<Any>>("/ids")
 
         assertThat(responseData).isEmpty()
     }
 
     @Test
-    fun `get data for id when there is no data returns '404 NOT FOUND'`() {
-        val responseEntity = restTemplate.getForEntity("/data/42", Any::class.java)
-
-        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
-    }
-
-    @Test
-    fun `post data returns success response`() {
+    fun `get ids returns id of posted data`() {
         val headers = HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         val entity = HttpEntity("""{ "test_key" : "dummy_value" }""", headers)
+        val postedId = restTemplate.postForObject("/data", entity, String::class.java)
 
-        val responseEntity: ResponseEntity<String> = restTemplate.postForEntity("/data", entity, String::class.java)
+        val responseData: List<String>? = restTemplate.getForObject("/ids")
 
-        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(responseEntity.body!!).isNotEmpty
+        assertThat(responseData).containsExactly(postedId)
+    }
+
+    @Test
+    fun `get all data when there is no data returns empty list`() {
+        val responseData: List<Any>? = restTemplate.getForObject("/data")
+
+        assertThat(responseData).isEmpty()
     }
 
     @Test
@@ -61,7 +61,7 @@ class DataBoundaryTest(@Autowired private val restTemplate: TestRestTemplate) {
         val entity = HttpEntity("""{ "test_key" : "dummy_value" }""", headers)
         restTemplate.postForEntity("/data", entity, String::class.java)
 
-        val responseData: JsonArray? = restTemplate.getForObject<JsonArray>("/data")
+        val responseData: JsonArray? = restTemplate.getForObject("/data")
 
         assertThat(responseData).hasSize(1).satisfiesExactly(
             { element ->
@@ -74,14 +74,33 @@ class DataBoundaryTest(@Autowired private val restTemplate: TestRestTemplate) {
     }
 
     @Test
+    fun `get data for id when there is no data returns '404 NOT FOUND'`() {
+        val responseEntity = restTemplate.getForEntity("/data/42", Any::class.java)
+
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.NOT_FOUND)
+    }
+
+    @Test
     fun `get data for id returns posted data`() {
         val headers = HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         val entity = HttpEntity("""{ "test_key" : "dummy_value" }""", headers)
         val id = restTemplate.postForObject("/data", entity, String::class.java)
 
-        val responseData: JsonObject? = restTemplate.getForObject<JsonObject>("/data/$id")
+        val responseData: JsonObject? = restTemplate.getForObject("/data/$id")
 
         assertThat(responseData).containsEntry("test_key", JsonPrimitive("dummy_value"))
+    }
+
+    @Test
+    fun `post data returns success response`() {
+        val headers = HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        val entity = HttpEntity("""{ "test_key" : "dummy_value" }""", headers)
+
+        val responseEntity: ResponseEntity<String> = restTemplate.postForEntity("/data", entity, String::class.java)
+
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(responseEntity.body!!).isNotEmpty
     }
 }

@@ -21,6 +21,11 @@ import org.springframework.web.bind.annotation.RestController
 class DataBoundary(private val dataCollection: NitriteCollection) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
+    @GetMapping("/ids")
+    fun retrieveIds(): List<String> {
+        return dataCollection.find().map { d -> d.id.idValue }
+    };
+
     @GetMapping("/data")
     fun retrieve(): List<Document> {
         return dataCollection.find().toList()
@@ -42,7 +47,7 @@ class DataBoundary(private val dataCollection: NitriteCollection) {
 
         val document: Document = Document.createDocument(payload)
         val writeResult: WriteResult = dataCollection.insert(document)
-        val documentId = writeResult.first()
+        val documentId: NitriteId = writeResult.first()
 
         return ResponseEntity<String>(documentId.idValue, HttpStatus.OK)
     }
